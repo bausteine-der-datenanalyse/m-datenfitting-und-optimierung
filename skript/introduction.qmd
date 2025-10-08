@@ -1,0 +1,82 @@
+# Datenanalyse und Modellierung
+
+## Einleitung
+
+In dieser Einheit lernen Sie, wie man reale Messdaten – etwa aus Experimenten 
+oder Ingenieurprojekten – mit NumPy und Matplotlib verarbeitet und analysiert. 
+Der Fokus liegt dabei auf einem praxisnahen Umgang mit Daten im CSV-Format.
+
+## Lernziele dieses Kapitels
+
+Sie lernen in dieser Einheit:
+
+- wie Sie strukturierte CSV-Daten in NumPy-Arrays überführen,
+- wie Sie fehlende Werte erkennen und ersetzen,
+- wie Sie typische statistische Kennzahlen berechnen,
+- wie Sie Daten mit Matplotlib visualisieren,
+- wie Sie Daten interpolieren und Trends glätten,
+- und wie Sie reale Anwendungen – z. B. aus dem Bauwesen – analysieren.
+
+
+## CSV-Dateien: Ein typisches Format für Messdaten
+
+CSV-Dateien („Comma Separated Values“) sind weit verbreitet – etwa für:
+
+- Temperaturverläufe,
+- Messreihen aus Experimenten,
+- Logdaten von Sensoren.
+
+Zu Beginn wird ein Beispiel betrachtet: Temperatur, Luftfeuchtigkeit und CO₂-Werte. 
+Diese Datei enthält auch einige **fehlende Werte**, wie sie in realen Daten oft vorkommen.
+
+```{python}
+import numpy as np
+data = np.genfromtxt("beispiel.csv", delimiter=",", skip_header=1)
+print(data)
+```
+
+## Fehlende Werte erkennen und bereinigen
+
+Fehlende Werte werden beim Einlesen als `np.nan` (Not a Number) codiert. Zunächst wird gezählt, wie viele Werte fehlen:
+
+```{python}
+print(np.isnan(data).sum(axis=0))
+```
+
+Um die Analyse nicht zu verfälschen, werden sie ersetzt – z. B. durch den Mittelwert der Spalte:
+
+```{python}
+for i in range(data.shape[1]):
+    mean = np.nanmean(data[:, i])
+    data[:, i] = np.where(np.isnan(data[:, i]), mean, data[:, i])
+```
+
+## Statistische Kennzahlen berechnen
+
+Typische Kennwerte zur Beschreibung von Daten:
+
+- **Mittelwert**: Durchschnitt
+- **Standardabweichung**: Streuung
+- **Minimum und Maximum**
+
+```{python}
+print("Mittelwerte:", np.mean(data, axis=0))
+print("Standardabweichung:", np.std(data, axis=0))
+```
+
+## Daten visualisieren
+
+Mit Matplotlib lassen sich Daten übersichtlich darstellen. Es werden z. B. Linien- und Histogrammplots genutzt.
+
+```{python}
+import matplotlib.pyplot as plt
+
+labels = ["Temperatur (°C)", "Luftfeuchtigkeit (%)", "CO₂ (ppm)"]
+
+for i in range(data.shape[1]):
+    plt.plot(data[:, i], label=labels[i])
+plt.legend()
+plt.title("Messwerte im Verlauf")
+plt.grid(True)
+plt.show()
+```

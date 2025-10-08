@@ -1,0 +1,158 @@
+# Übungen
+
+```{python}
+#| echo: false
+import numpy as np
+import numpy.polynomial.polynomial as poly
+import matplotlib.pyplot as plt
+```
+
+## Übung: Ballonfahrt-Daten analysieren
+In der Datei '01-daten/messdaten-ballonfahrt.txt' sind Messdaten zur Höhe eines Ballons während einer Ballonfahrt gespeichert. In der ersten Zeile der Datei sind die gemessenen Größen und ihre Einheit notiert.
+
+```{python}
+# Dateikopf als String einlesen
+ballon = np.genfromtxt("01-daten/messdaten-ballonfahrt.txt", delimiter=",", max_rows= 4, dtype='str')
+
+print("Der Kopf der Datei:")
+print(ballon)
+```
+
+Schauen wir uns die Daten einmal an:
+
+```{python}
+#| echo: false
+#| fig-alt: "Darstellung der Höhe des Ballons über die auf der x-Achse abgetragene Zeit."
+ballon = np.genfromtxt("01-daten/messdaten-ballonfahrt.txt", delimiter=",", skip_header=1)
+zeit = ballon[:, 0]
+hoehe = ballon[:, 1]
+
+plt.scatter(zeit, hoehe)
+plt.title("Ballonfahrt – Höhe über Zeit")
+plt.xlabel("Zeit (s)")
+plt.ylabel("Höhe (m)")
+plt.grid(True)
+plt.show()
+```
+
+&nbsp;
+
+Gesucht ist ein Polynom, das die Steiggeschwindigkeit, also die Änderung der Höhe mit der Zeit, des Heißluftballons beschreibt. 
+
+Schreiben Sie ein Programm, das:
+
+  - die Höhe aus den Daten ausliest und die Steiggeschwindigkeit berechnet,
+  - einen Fit der Steiggeschwindigkeit mit einem Polynom dritten Grades durchführt.
+
+Stellen Sie die Höhe, die Geschwindigkeit und den Fit jeweils gegen die Zeit dar. Beschriften Sie die Achsen.
+
+::: {#tip-musterloesung .callout-tip collapse="true"}
+## Musterlösung
+
+Zuerst werden die Daten ausgelesen.
+```{python}
+# Daten auslesen
+ballon = np.genfromtxt("01-daten/messdaten-ballonfahrt.txt", delimiter=",", skip_header=1)
+zeit = ballon[:, 0]
+hoehe = ballon[:, 1]
+```
+
+Anschließend berechnen wir die Steiggeschwindigkeit $\frac{\Delta Höhe}{\Delta Zeit}$. Dazu verwenden wir die Funktion `np.diff()`. Diese berechnet die Differenz jedes Werts zu seinem Vorgänger `ergebnis[i] = wert[i+1] - wert[i]`. Für den i-ten Wert wird also keine Differenz berechnet und das Ergebnis ist um ein Element kürzer. Die Steiggeschwindigkeit in $\frac{m}{s}$ ergibt sich aus dem Quotienten beider Reihen.
+
+```{python}
+# Differenzen berechnen
+delta_hoehe = np.diff(hoehe)
+print("Veränderung der Höhe: ", delta_hoehe[0:4])
+
+delta_zeit = np.diff(zeit)
+print("Veränderung der Zeit: ", delta_zeit[0:4])
+
+# Steiggeschwindigkeit berechnen
+steiggeschwindigkeit = delta_hoehe / delta_zeit
+print("Steiggeschwindigkeit: ", steiggeschwindigkeit[0:4])
+```
+
+Mit `numpy.polynomial.polynomial.polyfit()` berechnen wir erst ein Polynom dritten Grades und dann mit `numpy.polynomial.polynomial.polyval()` die gefitteten Daten.
+
+```{python}
+polynom3_steiggeschwindigkeit = poly.polyfit(zeit[1:], steiggeschwindigkeit, deg = 3)
+
+fit_steiggeschwindigkeit = poly.polyval(x = zeit[1:], c = polynom3_steiggeschwindigkeit)
+```
+
+
+```{python}
+#| fig-alt: "Darstellung der Höhe des Ballons, der Steiggeschwindigkeit und der gefitteten Steiggeschwindigkeit über die auf der x-Achse abgetragene Zeit."
+
+# plotten
+plt.suptitle("Ballonfahrt")
+
+## subplot Höhe über Zeit
+plt.subplot(1, 3, 1)
+plt.scatter(zeit, hoehe)
+plt.title("Höhe")
+plt.xlabel("Zeit (s)")
+plt.ylabel("Höhe (m)")
+plt.grid(True)
+
+## subplot Steiggeschwindigkeit über Zeit
+## Länge des Arrays Steiggeschwindigkeit ist n-1
+plt.subplot(1, 3, 2)
+plt.scatter(zeit[1:], steiggeschwindigkeit)
+plt.title("Steiggeschwindigkeit")
+plt.xlabel("Zeit (s)")
+plt.ylabel("Steiggeschwindigkeit (m/s)")
+plt.grid(True)
+
+## subplot Polynom 3. Grades Steiggeschwinkdigkeit über Zeit
+## Länge des Arrays Steiggeschwindigkeit ist n-1
+plt.subplot(1, 3, 3)
+plt.plot(zeit[1:], fit_steiggeschwindigkeit)
+plt.title("interpolierte\nSteiggeschwindigkeit")
+plt.xlabel("Zeit (s)")
+plt.ylabel("Steiggeschwindigkeit (m/s)")
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+## Übung: Balkenverformung im Bauingenieurwesen
+**hierhier: Aufgabe formulieren, Daten anschauen und Musterlösung erstellen**
+
+**to do: fig-alt**
+
+Ein Träger wird in der Mitte belastet. Die Durchbiegung wird an 50 Punkten gemessen. 
+
+
+Glätten Sie die Daten und stellen Sie die gemessenen und die geglätteten Daten gemeinsam dar.
+
+```{python}
+balken = np.genfromtxt("01-daten/balken-durchbiegung.csv", delimiter=",", skip_header=1)
+x = balken[:, 0]
+y = balken[:, 1]
+
+window = 7
+weights = np.ones(window) / window
+y_smooth = np.convolve(y, weights, mode='valid')
+
+plt.plot(x, y, label="Messung", alpha=0.5)
+plt.plot(x[(window-1)//2:-(window//2)], y_smooth, label="Geglättet", color='red')
+plt.title("Durchbiegung eines Trägers")
+plt.xlabel("Position (m)")
+plt.ylabel("Durchbiegung (mm)")
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+## Übung: Neutronenstreuung
+Die Datei '01-daten/neutronen.txt' enthält Daten eines Neutronenstreuexperiments.
+
+1. Lesen Sie die Daten ein
+2. Versuchen Sie die ersten zwei Spalten mit einem Polynom eines geeigneten Grades zu fitten und stellen Sie das Ergebnis graphisch dar.
+3. Fitten Sie die Daten erneut, aber nutzen Sie dieses Mal Splines.
+4. Stellen Sie das Ergebnis ebenfalls graphisch dar und vergleichen Sie mit den Polynomfit.
+5. Was sind die Vor- und Nachteile der jeweiligen Varianten?

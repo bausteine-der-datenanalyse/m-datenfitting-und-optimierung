@@ -1,0 +1,74 @@
+# Fitting
+
+```{python}
+#| echo: false
+import numpy as np
+import numpy.polynomial.polynomial as poly
+import matplotlib.pyplot as plt
+```
+
+Beim Fitting wird eine Modellfunktion gesucht, welche die Messdaten nicht unbedingt exakt abbildet. Wird ein Polynom verwendet, so hat es einen Grad, welcher deutlich kleiner ist, als die Anzahl der Messpunkte. Lineare Regression ist ein Beispiel für ein Fitting durch ein Polynom mit dem Grad Eins.
+
+Zum Fitten durch ein Polynom kann die Funktion `numpy.polynomial.polynomial.polyfit()` verwendet werden, genauso wie bei der Polynominterpolation. Diesmal jedoch mit einem kleineren Polynomgrad.
+
+Im folgenden Beispiel werden zunächst Modelldaten generiert und dann mit entsprechenden Polynomen gefittet.
+
+```{python}
+#| fig-alt: "Darstellung von Modelldaten, die trendmäßig von links unten nach rechts oben verteilt sind."
+
+xmin = 0
+xmax = 5
+x = np.linspace(xmin, xmax, 100)
+
+ni = 25
+
+# x-Werte mit leichtem Rauschen
+xi = np.linspace(xmin, xmax, ni) + 0.2*(2 * np.random.random(ni) -1)
+
+# y(x) = 2x+0.5 mit leichtem Rauschen
+yi = 2*xi + 0.5 + 2*(2 * np.random.random(ni) -1)
+
+plt.scatter(xi, yi, color='C1')
+plt.grid()
+
+plt.show()
+```
+
+```{python}
+#| fig-alt: "Darstellung von Modelldaten, die trendmäßig von links unten nach rechts oben verteilt sind, und einer linearen Modellfunktion."
+
+P1 = poly.polyfit(xi, yi, 1)
+
+plt.scatter(xi, yi, color='C1', zorder=3, label='Messpunkte')
+plt.plot(x, poly.polyval(x, P1), color='C0', label="Modellfunktion")
+plt.grid()
+plt.legend()
+
+plt.show()
+```
+
+In diesem Beispiel werden ein Polynom ersten Grades und ein Polynom zweiten Grades bestimmt.
+
+```{python}
+# x-Werte mit leichtem Rauschen
+xi = np.linspace(xmin, xmax, ni) + 0.2*(2 * np.random.random(ni) -1)
+
+# y(x) = 2x+0.5 mit leichtem Rauschen
+yi = (xi - 2)**2 -2*xi + 2.5 + 2*(2 * np.random.random(ni) -1)
+```
+
+```{python}
+#| fig-alt: "Darstellung von Modelldaten, die ungefähr U-förmig sind, sowie einer linearen und einer quadratischen Modellfunktion."
+
+P1 = poly.polyfit(xi, yi, 1)
+P2 = poly.polyfit(xi, yi, 2)
+
+plt.scatter(xi, yi, color='C1', zorder=3, label='Messpunkte')
+plt.plot(x, poly.polyval(x, P1), color='C0', label="Modellfunktion, Grad 1")
+plt.plot(x, poly.polyval(x, P2), color='C2', label="Modellfunktion, Grad 2")
+plt.grid()
+plt.legend()
+
+plt.show()
+```
+
