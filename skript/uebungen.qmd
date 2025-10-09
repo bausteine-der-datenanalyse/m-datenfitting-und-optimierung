@@ -5,6 +5,7 @@
 import numpy as np
 import numpy.polynomial.polynomial as poly
 import matplotlib.pyplot as plt
+import scipy.interpolate as si
 ```
 
 ## Übung: Ballonfahrt-Daten analysieren
@@ -46,8 +47,8 @@ Schreiben Sie ein Programm, das:
 
 Stellen Sie die Höhe, die Geschwindigkeit und den Fit jeweils gegen die Zeit dar. Beschriften Sie die Achsen.
 
-::: {#tip-musterloesung .callout-tip collapse="true"}
-## Musterlösung
+::: {#tip-musterloesung-ballon .callout-tip collapse="true"}
+## Musterlösung Ballonfahrt
 
 Zuerst werden die Daten ausgelesen.
 ```{python}
@@ -120,16 +121,34 @@ plt.show()
 :::
 
 ## Übung: Balkenverformung im Bauingenieurwesen
-**hierhier: Aufgabe formulieren, Daten anschauen und Musterlösung erstellen**
 
-**to do: fig-alt**
+Ein Träger wird in der Mitte belastet.
 
-Ein Träger wird in der Mitte belastet. Die Durchbiegung wird an 50 Punkten gemessen. 
+::: {.border}
+![Beispiel für einen Versuchsaufbau Balkenverformung](00-bilder/balkenverformung-universit%C3%A4t-der-bundeswehr.jpeg)
 
+Balkenverformung von Universität der Bundeswehr München. Das Werk ist abrufbar auf der Internetseite der [UniBw M](https://www.unibw.de/mechanik-und-statik/bs/labor-baustatik/ermittlung-der-verformung-von-geraden-balken). ohne Jahr
 
-Glätten Sie die Daten und stellen Sie die gemessenen und die geglätteten Daten gemeinsam dar.
+:::
+
+&nbsp;
+
+Schauen wir uns die Struktur der Daten einmal an.
+```{python}
+balken = np.genfromtxt("01-daten/balken-durchbiegung.csv", delimiter=",", max_rows= 4, dtype='str')
+
+print("Der Kopf der Datei:")
+print(balken)
+```
+
+Die Durchbiegung wird an 50 Punkten gemessen. Glätten Sie die Daten und stellen Sie die gemessenen und die geglätteten Daten gemeinsam dar.
+
+::: {#tip-musterloesung-balken .callout-tip collapse="true"}
+## Musterlösung Balken
 
 ```{python}
+#| fig-alt: "Darstellung der Messdaten und der geglätteten Balkenbiegung in Form eines umgekehrten U."
+
 balken = np.genfromtxt("01-daten/balken-durchbiegung.csv", delimiter=",", skip_header=1)
 x = balken[:, 0]
 y = balken[:, 1]
@@ -145,14 +164,100 @@ plt.xlabel("Position (m)")
 plt.ylabel("Durchbiegung (mm)")
 plt.legend()
 plt.grid(True)
+
 plt.show()
 ```
 
+:::
+
 ## Übung: Neutronenstreuung
-Die Datei '01-daten/neutronen.txt' enthält Daten eines Neutronenstreuexperiments.
+Die Datei '01-daten/neutronen.txt' enthält Daten eines Neutronenstreuexperiments. Der Dateikopf:
+
+```{python}
+# Dateikopf als String einlesen
+neutronen = np.genfromtxt("01-daten/neutronen.txt", delimiter="\t", max_rows= 4, dtype='str')
+print(neutronen)
+```
+
+In der Spalte 'E(MeV)' ist die Energie eines Neutrons, das auf ein Ziel geschossen wird, in Megaelektronenvolt eingetragen. In der Spalte 'sigma(mb)' ist der Wirkungsquerschnitt, gemessen in Millibarn (mb), eingetragen. In der Spalte 'Delta sigma(mb)' ist die Unsicherheit des gemessenen Wirkungsquerschnitts, ebenfalls in Millibarn (mb), eingetragen. 
 
 1. Lesen Sie die Daten ein
 2. Versuchen Sie die ersten zwei Spalten mit einem Polynom eines geeigneten Grades zu fitten und stellen Sie das Ergebnis graphisch dar.
 3. Fitten Sie die Daten erneut, aber nutzen Sie dieses Mal Splines.
 4. Stellen Sie das Ergebnis ebenfalls graphisch dar und vergleichen Sie mit den Polynomfit.
 5. Was sind die Vor- und Nachteile der jeweiligen Varianten?
+
+::: {#tip-musterloesung-neutronen .callout-tip collapse="true"}
+## Musterlösung Neutronenstreuung
+
+1. Daten einlesen
+```{python}
+#| fig-alt: "Darstellung der Messdaten"
+
+neutronen = np.genfromtxt("01-daten/neutronen.txt", delimiter="\t", skip_header=1)
+neutronenenergie = neutronen[:, 0]
+wirkungsquerschnitt = neutronen[:, 1]
+
+plt.plot(neutronenenergie, wirkungsquerschnitt, label="Messdaten", alpha=0.5)
+plt.xlabel("Neutronenenergie (MeV)")
+plt.ylabel("Wirkungsquerschnitt (mb)")
+plt.legend()
+plt.grid(True)
+
+plt.show()
+```
+
+&nbsp;
+
+2. + 3. Polynom und Splines fitten:
+
+```{python}
+# Polynom 
+polynom5 = poly.polyfit(neutronenenergie, wirkungsquerschnitt, deg = 5)
+fit =  poly.polyval(x = neutronenenergie, c = polynom5)
+
+# Splines mit scipy
+splines3 = si.splrep(neutronenenergie, wirkungsquerschnitt)
+y_splines3 = si.splev(neutronenenergie, splines3)
+
+# Splines mit NumPy
+x_neu = np.linspace(neutronenenergie.min(), neutronenenergie.max(), num=50)
+y_splines1 = np.interp(x_neu, neutronenenergie, wirkungsquerschnitt) # linear interpolieren
+```
+
+4. Grafische Darstellung:
+```{python}
+#| fig-alt: "In zwei übereinanderliegenden Subplots werden die Messdaten gemeinsam dargestellt mit einem gefitteten Polynom und kubischen Splines (oben) bzw. linearen Splines (unten). Beide Splines sind identisch."
+
+plt.figure(figsize = [7, 5])
+
+# Vergleich mit kubischen Splines
+plt.subplot(2, 1, 1)
+plt.plot(neutronenenergie, wirkungsquerschnitt, linewidth = 5, alpha=0.3, label="Messdaten")
+plt.plot(neutronenenergie, fit, label = "gefittetes Polynom")
+plt.plot(neutronenenergie, y_splines3, linestyle = 'dashdot', label = "kubische Splines")
+plt.xlabel("Neutronenenergie (MeV)")
+plt.ylabel("Wirkungsquerschnitt (mb)")
+plt.legend()
+plt.grid(True)
+
+# Vergleich mit linearen Splines
+plt.subplot(2, 1, 2)
+plt.plot(neutronenenergie, wirkungsquerschnitt, linewidth = 5, alpha=0.3, label="Messdaten")
+plt.plot(neutronenenergie, fit, label = "gefittetes Polynom")
+
+plt.plot(x_neu, y_splines1, linestyle = 'dotted', label = 'lineare Splines')
+plt.xlabel("Neutronenenergie (MeV)")
+plt.ylabel("Wirkungsquerschnitt (mb)")
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()
+```
+
+&nbsp;
+
+5.: Die Splines bilden die Daten exakt nach. Das kann ein Vorteil sein, wenn keine Glättung der Daten gewünscht ist. Das Polynom ist dagegen nicht exakt an die Daten angepasst. Dafür können alle Datenpunkte mit einer einzigen Modellgleichung approximiert werden.
+
+:::

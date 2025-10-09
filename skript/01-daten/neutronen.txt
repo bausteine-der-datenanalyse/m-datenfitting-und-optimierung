@@ -1,4 +1,4 @@
-# E(MeV)	sigma(mb)	Delta sigma(mb)
+E(MeV)	sigma(mb)	Delta sigma(mb)
  0.00	10.60	 1.39
 25.00	16.00	 2.09
 50.00	45.00	 3.85
