@@ -2,11 +2,9 @@
 Experiementell gewonnene Daten können stark verrauscht sein oder die Beziehung der Veriablen wird am besten durch einen nicht-linearen Zusammenhang beschrieben. Datenfitting ist der Prozess, ein Modell an einen Datensatz anzupassen, um die zugrundeliegende Beziehung zwischen den Variablen zu beschreiben, die Daten zu glätten oder Werte zwischen den vorhandenen Datenpunkten zu schätzen. Das Ziel dieses Prozesses ist es, eine Funktion zu finden, die den Datensatz so gut wie möglich beschreibt, indem die Abweichung zwischen dem Modell und den tatsächlichen Daten minimiert wird. Man nennt diesen Prozess auch Modellierung.
 
 In diesem Baustein werden die folgenden Module verwendet:
-**wird pandas überhaupt verwendet?**
 ``` {python}
 import numpy as np
 import numpy.polynomial.polynomial as poly
-import pandas as pd
 import matplotlib.pyplot as plt
 ```
 
