@@ -2,18 +2,13 @@
 Die Bearbeitungszeit dieses Bausteins beträgt circa **Platzhalter**. Für die Bearbeitung dieses Bausteins werden folgende Bausteine vorausgesetzt:
 
 - Werkzeugbaustein Python
-- **to do**
+- Werkzeugbaustein NumPy
 
 In diesem Baustein werden die folgenden Module und Pakete verwendet:
 
 - numpy
   - numpy.polynomial
-- matplotlib
-**to do**
+- matplotlib.pyplot
 
-Querverweis auf: 
-
-**to do**
-
-Im Baustein werden folgende Daten verwendet:
+Im Baustein werden folgende Daten verwendet: Es werden keine von Dritten bezogene Daten verwendet.
 
