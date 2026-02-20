@@ -125,7 +125,7 @@ plt.show()
 Ein Träger wird in der Mitte belastet.
 
 ::: {.border}
-![Beispiel für einen Versuchsaufbau Balkenverformung](00-bilder/balkenverformung-universit%C3%A4t-der-bundeswehr.jpeg)
+![Beispiel für einen Versuchsaufbau Balkenverformung](00-bilder/balkenverformung-universit%C3%A4t-der-bundeswehr.jpeg){fig-alt="Versuchsaufbau zur Balkenverformung"}
 
 Balkenverformung von Universität der Bundeswehr München. Das Werk ist abrufbar auf der Internetseite der [UniBw M](https://www.unibw.de/mechanik-und-statik/bs/labor-baustatik/ermittlung-der-verformung-von-geraden-balken). ohne Jahr
 
