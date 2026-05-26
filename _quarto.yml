@@ -24,6 +24,7 @@ book:
     - skript/splines.qmd
     - skript/glaetten.qmd
     - skript/uebungen.qmd
+    - skript/daswichtigste.qmd
 
   sidebar:
     title: "Methodenbaustein Datenfitting und Datenoptimierung"
