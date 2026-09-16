@@ -58,7 +58,7 @@ $$ \phi_1(x)=1,\quad \phi_2(x)=x,\quad \phi_3(x)=x^2,\quad \cdots,\quad \phi_m =
 
 ## Polynome
 
-Polynome $P(x)$ sind Funktionen in Form einer Summe von Potenzfunktionen mit natürlichzahligen Exponenten $( x^i, i \in \mathbb{N})$ mit den entsprechenden Koeffzienten $a_i$:
+Polynome $P(x)$ sind Funktionen in Form einer Summe von Potenzfunktionen mit natürlichzahligen Exponenten $( x^i, i \in \mathbb{N})$ mit den entsprechenden Koeffizienten $a_i$:
 
 $$
 P(x) = \sum_{i=0}^n a_i x^i = a_n x^n + a_{n-1} x^{n-1} + \cdots + a_2 x^2 + a_1 x + a_0, \quad i, n \in \mathbb{N}, a_i \in \mathbb{R}
@@ -262,7 +262,7 @@ Alternativ kann auch ein Gleichungssystem, welches durch die Polynomialbasis $\p
 
 $$  y(x_i) = \sum_{i=1}^{m}\beta_i \cdot \phi_i(x_i) = \beta_1\cdot \phi_1(x_i) + \cdots + \beta_m\cdot \phi_m(x_i) = y_i $$
 
-Das allgemeine Geleichungssystem lautet
+Das allgemeine Gleichungssystem lautet
 
 $$
 \left( \begin{matrix} \phi_1(x_1) & \phi_2(x_1) & \cdots & \phi_m(x_1) \\ 
@@ -282,9 +282,9 @@ $$
 \underbrace{\left( \begin{matrix} 1 & x_1 & \cdots & x_1^{n-1} \\ 1 & x_2 & \cdots & x_2^{n-1} \\ \vdots &\vdots & \ddots & \vdots \\ 1 & x_n & \cdots & x_n^{n-1} \\ \end{matrix}\right)}_{V}. \left(  \begin{matrix} \beta_1 \\  \beta_2 \\   \vdots \\   \beta_m \\ \end{matrix} \right) = \left(  \begin{matrix} y_1 \\  y_2 \\   \vdots \\   y_n \\ \end{matrix} \right)
 $$
 
-Die Matrix $V$ heisst [Vandermonde-Matrix](https://de.wikipedia.org/wiki/Vandermonde-Matrix) und kann exakt gelöst werden, für $m=n$ und wenn für alle $i, j; i\neq j$ gilt $x_i \neq x_j$. 
+Die Matrix $V$ heißt [Vandermonde-Matrix](https://de.wikipedia.org/wiki/Vandermonde-Matrix) und kann exakt gelöst werden, für $m=n$ und wenn für alle $i, j; i\neq j$ gilt $x_i \neq x_j$. 
 
-In Python kann das Interpolationsproblem mit der [Funktion `numpy.polynomial.polynomial.polyfit()`](https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.polyfit.html) gelöst werden, das wir durch durch das Importieren des Moduls mit dem Schlüsselwort `poly` mit `poly.polyfit()` aufrufen können. Das folgende Beispiel demonstriert deren Anwendung.
+In Python kann das Interpolationsproblem mit der [Funktion `numpy.polynomial.polynomial.polyfit()`](https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.polyfit.html) gelöst werden, das wir durch das Importieren des Moduls mit dem Schlüsselwort `poly` mit `poly.polyfit()` aufrufen können. Das folgende Beispiel demonstriert deren Anwendung.
 
 Die Messtellen folgen in dem Beispiel der Funktion $f(x)$, welche nur zur Generierung der Datenpunkte verwendet wird. 
 
